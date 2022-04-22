@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Shop</string>
+    <string name="create_account">Create Account</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="ibay">iBay</string>
+    <string name="password">Password</string>
+    <string name="main_menu">Main Menu</string>
+    <string name="welcome_user">Welcome, user!</string>
+    <string name="search">Search</string>
+    <string name="order_history">Order History</string>
+    <string name="cancel_order">Cancel Order</string>
+    <string name="admin">Admin</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="create">Create</string>
+    <string name="back">Back</string>
+    <string name="add_an_item">Add An Item</string>
+    <string name="what_would_you_like_to_do">What would you like to do?</string>
+    <string name="view_existing_items">View Existing Items</string>
+    <string name="remove_an_item">Remove An Item</string>
+    <string name="view_existing_users">View Existing Users</string>
+    <string name="all_existing_users">All Existing Users</string>
+</resources>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2196F3"
+    tools:context=".LandingActivity">
+
+    <TextView
+        android:id="@+id/landing_page_iBay_textView"
+        android:layout_width="245dp"
+        android:layout_height="99dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/ibay"
+        android:gravity="center"
+        android:textSize="55sp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"  />
+
+    <TextView
+        android:id="@+id/landing_page_mainMenu_textView"
+        android:layout_width="156dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="@string/main_menu"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_page_iBay_textView" />
+
+    <TextView
+        android:id="@+id/landing_page_welcomeUser_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="@string/welcome_user"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_page_mainMenu_textView" />
+
+    <Button
+        android:id="@+id/landing_page_search_button"
+        android:layout_width="180dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#000000"
+        android:text="@string/search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_page_welcomeUser_textView" />
+
+    <Button
+        android:id="@+id/landing_page_orderHistory_button"
+        android:layout_width="180dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#000000"
+        android:text="@string/order_history"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_page_search_button" />
+
+    <Button
+        android:id="@+id/landing_page_cancelOrder_button"
+        android:layout_width="180dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#000000"
+        android:text="@string/cancel_order"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_page_orderHistory_button" />
+
+    <Button
+        android:id="@+id/landing_page_admin_button"
+        android:layout_width="180dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#000000"
+        android:text="@string/admin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_page_cancelOrder_button" />
+
+    <Button
+        android:id="@+id/landing_page_signOut_button"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="508dp"
+        android:backgroundTint="#2196F3"
+        android:stateListAnimator="@null"
+        android:text="@string/sign_out"
+        app:layout_constraintEnd_toStartOf="@+id/landing_page_admin_button"
+        app:layout_constraintHorizontal_bias="0.355"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
