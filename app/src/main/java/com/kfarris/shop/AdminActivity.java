@@ -7,6 +7,7 @@ import androidx.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class AdminActivity extends AppCompatActivity {
     Button mRemoveAnItemButton;
     Button mViewExistingUsersButton;
     Button mBackButton;
+    Button mXButton;
 
     UserDAO mUserDAO;
 
@@ -101,9 +103,19 @@ public class AdminActivity extends AppCompatActivity {
         mDialogBuilder = new AlertDialog.Builder(this);
         final View userPopUpView = getLayoutInflater().inflate(R.layout.popup, null);
         mAllUsersTextView = (TextView) userPopUpView.findViewById(R.id.user_popup_allUsersScroll_textView);
+        mXButton = (Button) userPopUpView.findViewById(R.id.popup_x_button);
         mDialogBuilder.setView(userPopUpView);
         dialog = mDialogBuilder.create();
         dialog.show();
+
+        mXButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        mAllUsersTextView.setMovementMethod(new ScrollingMovementMethod());
 
         StringBuilder sb = new StringBuilder();
 
