@@ -3,8 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/activity_create_account.xml" value="0.2695035460992908" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/activity_landing.xml" value="0.2695035460992908" />
+        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/add_item_dialog.xml" value="0.2695035460992908" />
+        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/add_product_admin_dialog.xml" value="0.5541666666666667" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/popup.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/view_users_admin_dialog.xml" value="0.2695035460992908" />
         <entry key="app/src/main/res/layout/activity_admin.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_create_account.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_landing.xml" value="0.28229166666666666" />
