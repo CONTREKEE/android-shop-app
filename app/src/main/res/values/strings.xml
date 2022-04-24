@@ -27,4 +27,12 @@
     <string name="product_location">Product Location</string>
     <string name="product_quantity">Product Quantity</string>
     <string name="product_description">Product Description</string>
+    <string name="all_products">All Products</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="remove_product">Remove Product</string>
+    <string name="select_a_product_to_remove">Select A Product To Remove</string>
+    <string name="remove">Remove</string>
+    <string name="search_for_an_item">Search For An Item</string>
+    <string name="item_name">Item Name</string>
+    <string name="buy">Buy</string>
 </resources>

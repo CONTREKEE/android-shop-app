@@ -16,6 +16,9 @@ import com.kfarris.shop.DB.AppDatabase;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
                 AppDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
                 .build().UserDAO();
 
         mSharedPreferences = getSharedPreferences(mLoginFile, Context.MODE_PRIVATE);
@@ -64,11 +68,14 @@ public class MainActivity extends AppCompatActivity {
 
                 User user = mUserDAO.getUserInfo(username);
 
+                if (user != null) {
+
                 if (user.getPassword().equals(mSharedPreferences.getString(mPasswordPreference, null))) {
 
                     Intent intent = LandingActivity.intentFactory(getApplicationContext(),
                             username);
                     startActivity(intent);
+                    }
                 }
             }
         }
@@ -133,12 +140,12 @@ public class MainActivity extends AppCompatActivity {
     public void createDefaultUsers() {
 
         if (mUserDAO.getUserInfo("testuser1") == null) {
-            User testUser = new User("testuser1", "testuser1", 0);
+            User testUser = new User("testuser1", "testuser1", 0, new ArrayList<>());
             mUserDAO.insert(testUser);
         }
 
         if (mUserDAO.getUserInfo("admin2") == null) {
-            User adminUser = new User("admin2", "admin2", 1);
+            User adminUser = new User("admin2", "admin2", 1, new ArrayList<>());
             mUserDAO.insert(adminUser);
         }
 

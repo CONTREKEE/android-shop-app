@@ -62,6 +62,7 @@ public class LandingActivity extends AppCompatActivity {
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
                 AppDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
                 .build().UserDAO();
 
         mSharedPreferences = getSharedPreferences(MainActivity.mLoginFile, Context.MODE_PRIVATE);
@@ -82,6 +83,17 @@ public class LandingActivity extends AppCompatActivity {
             mLandingPageWelcomeUserTextView.setText(welcomeText);
 
         }
+
+        /**
+         * Search button.
+         */
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = SearchActivity.intentFactory(getApplicationContext(), username);
+                startActivity(intent);
+            }
+        });
 
         /**
          * Sign out button.

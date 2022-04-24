@@ -15,6 +15,8 @@ import com.kfarris.shop.DB.AppDatabase;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivityCreateAccountBinding;
 
+import java.util.ArrayList;
+
 public class CreateAccountActivity extends AppCompatActivity {
 
     ActivityCreateAccountBinding binding;
@@ -76,7 +78,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
                     if (user == null) {
                         user = new User(mCreateAccountUsernameTextEdit.getText().toString().toLowerCase(),
-                                mCreateAccountPasswordTextEdit.getText().toString(), 0);
+                                mCreateAccountPasswordTextEdit.getText().toString(), 0, new ArrayList<>());
                         mUserDAO.insert(user);
                         Toast.makeText(CreateAccountActivity.this, "Account created!",
                                 Toast.LENGTH_LONG).show();

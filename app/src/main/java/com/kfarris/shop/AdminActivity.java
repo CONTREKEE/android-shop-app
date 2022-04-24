@@ -9,15 +9,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kfarris.shop.DB.AppDatabase;
+import com.kfarris.shop.DB.ProductDAO;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivityAdminBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdminActivity extends AppCompatActivity {
@@ -26,14 +30,15 @@ public class AdminActivity extends AppCompatActivity {
 
     TextView mUserTextView;
 
-    Button mAddAnItemButton;
-    Button mViewExistingItemsButton;
-    Button mRemoveAnItemButton;
+    Button mAddAProductButton;
+    Button mViewExistingProductsButton;
+    Button mRemoveAProductButton;
     Button mViewExistingUsersButton;
     Button mBackButton;
     Button mXButton;
 
     UserDAO mUserDAO;
+    ProductDAO mProductDAO;
 
     private AlertDialog.Builder mDialogBuilder;
     private AlertDialog dialog;
@@ -56,9 +61,9 @@ public class AdminActivity extends AppCompatActivity {
 
         mUserTextView = binding.adminPageWelcomeTextView;
 
-        mAddAnItemButton = binding.adminPageAddAnItemButton;
-        mViewExistingItemsButton = binding.adminPageViewExistingItemsButton;
-        mRemoveAnItemButton = binding.adminPageRemoveAnItemButton;
+        mAddAProductButton = binding.adminPageAddAnItemButton;
+        mViewExistingProductsButton = binding.adminPageViewExistingItemsButton;
+        mRemoveAProductButton = binding.adminPageRemoveAnItemButton;
         mViewExistingUsersButton = binding.adminPageViewExistingUsersButton;
         mBackButton = binding.adminPageBackButton;
 
@@ -69,7 +74,15 @@ public class AdminActivity extends AppCompatActivity {
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
                 AppDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
                 .build().UserDAO();
+
+        mProductDAO = Room.databaseBuilder(this, AppDatabase.class,
+                AppDatabase.DATABASE_NAME)
+                .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
+                .build()
+                .ProductDAO();
 
         /**
          * Back button.
@@ -89,10 +102,32 @@ public class AdminActivity extends AppCompatActivity {
         /**
          * Show add product dialog
          */
-        mAddAnItemButton.setOnClickListener(new View.OnClickListener() {
+        mAddAProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addProductDialog();
+            }
+        });
+
+        /**
+         * View existing items dialog.
+         */
+
+        mViewExistingProductsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewAllProductsDialog();
+            }
+        });
+
+        /**
+         * Remove items dialog.
+         */
+
+        mRemoveAProductButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeProductDialog();
             }
         });
 
@@ -152,15 +187,15 @@ public class AdminActivity extends AppCompatActivity {
     public void addProductDialog() {
 
         mDialogBuilder = new AlertDialog.Builder(this);
-        final View userDialogView = getLayoutInflater().inflate(R.layout.add_product_admin_dialog, null);
-        EditText mProductName = (EditText) userDialogView.findViewById(R.id.add_product_page_productName_editText);
-        EditText mProductPrice = (EditText) userDialogView.findViewById(R.id.add_product_page_productPrice_editText);
-        EditText mProductLocation = (EditText) userDialogView.findViewById(R.id.add_product_page_productLocation_editText);
-        EditText mProductQuantity = (EditText) userDialogView.findViewById(R.id.add_product_page_productQuantity_editText);
-        EditText mProductDescription = (EditText) userDialogView.findViewById(R.id.add_product_page_productDescription_editText);
-        Button mAddProductButton = (Button) userDialogView.findViewById(R.id.add_product_page_addProduct_button);
-        Button mCancelProductButton = (Button) userDialogView.findViewById(R.id.add_product_page_cancelProduct_button);
-        mDialogBuilder.setView(userDialogView);
+        final View dialogView = getLayoutInflater().inflate(R.layout.add_product_admin_dialog, null);
+        EditText mProductName = (EditText) dialogView.findViewById(R.id.add_product_page_productName_editText);
+        EditText mProductPrice = (EditText) dialogView.findViewById(R.id.add_product_page_productPrice_editText);
+        EditText mProductLocation = (EditText) dialogView.findViewById(R.id.add_product_page_productLocation_editText);
+        EditText mProductQuantity = (EditText) dialogView.findViewById(R.id.add_product_page_productQuantity_editText);
+        EditText mProductDescription = (EditText) dialogView.findViewById(R.id.add_product_page_productDescription_editText);
+        Button mAddProductButton = (Button) dialogView.findViewById(R.id.add_product_page_addProduct_button);
+        Button mCancelProductButton = (Button) dialogView.findViewById(R.id.add_product_page_cancelProduct_button);
+        mDialogBuilder.setView(dialogView);
         dialog = mDialogBuilder.create();
         dialog.show();
 
@@ -168,17 +203,32 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (mProductName.getText().toString().length() > 1 &&
-                        mProductPrice.getText().toString().length() > 1 &&
-                        mProductLocation.getText().toString().length() > 1 &&
-                        mProductQuantity.getText().toString().length() > 1 &&
-                        mProductDescription.getText().toString().length() > 1) {
+                if (mProductName.getText().toString().length() > 0 &&
+                        mProductPrice.getText().toString().length() > 0 &&
+                        mProductLocation.getText().toString().length() > 0 &&
+                        mProductQuantity.getText().toString().length() > 0 &&
+                        mProductDescription.getText().toString().length() > 0) {
 
                     String name = mProductName.getText().toString();
                     Double price = Double.valueOf(mProductPrice.getText().toString());
                     String location = mProductLocation.getText().toString();
                     int quantity = Integer.valueOf(mProductQuantity.getText().toString());
                     String description = mProductDescription.getText().toString();
+
+                    if (mProductDAO.getProduct(name.toLowerCase()) == null) {
+
+                        Product product = new Product(name, name.toLowerCase(), price, location, quantity, description);
+                        mProductDAO.insert(product);
+
+                        Toast.makeText(AdminActivity.this, "Product [ " + name  + " ] added.",
+                                Toast.LENGTH_LONG).show();
+
+                        dialog.dismiss();
+
+                    }else {
+                        Toast.makeText(AdminActivity.this, "Product [ " + name  + " ] already added.",
+                                Toast.LENGTH_LONG).show();
+                    }
 
 
                 }else {
@@ -189,6 +239,105 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
 
+        mCancelProductButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+
+    }
+
+    public void viewAllProductsDialog() {
+
+        mDialogBuilder = new AlertDialog.Builder(this);
+        final View dialogView = getLayoutInflater().inflate(R.layout.view_items_admin_dialog, null);
+        TextView mAllProductsTextView = (TextView) dialogView.findViewById(R.id.all_products_page_allProducts_textView);
+        Button mDismissButton = (Button) dialogView.findViewById(R.id.all_products_page_dismiss_button);
+        mDialogBuilder.setView(dialogView);
+        dialog = mDialogBuilder.create();
+        dialog.show();
+
+        StringBuilder sb = new StringBuilder();
+
+        List<Product> products = mProductDAO.getProductsInfo();
+
+        for (Product product : products) {
+            sb.append(product.toString());
+            sb.append("\n- - - - - - - - - - - - - - - - - - - - - - - -\n");
+        }
+        mAllProductsTextView.setText(sb.toString());
+
+        mAllProductsTextView.setMovementMethod(new ScrollingMovementMethod());
+
+
+        mDismissButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    public void removeProductDialog() {
+
+        mDialogBuilder = new AlertDialog.Builder(this);
+        final View dialogView = getLayoutInflater().inflate(R.layout.remove_product_admin_dialog, null);
+
+        Button mRemoveProductButton = (Button) dialogView.findViewById(R.id.remove_product_page_remove_button);
+        Button mRemoveCancelButton = (Button) dialogView.findViewById(R.id.remove_product_page_cancel_button);
+        Spinner mRemoveProductDropDownMenu = (Spinner) dialogView.findViewById(R.id.remove_product_page_product_dropDownMenu);
+
+        mDialogBuilder.setView(dialogView);
+        dialog = mDialogBuilder.create();
+        dialog.show();
+
+        ArrayList<String> names = new ArrayList<>();
+
+        for (Product product : mProductDAO.getProductsInfo()) {
+            names.add(product.getProductName());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mRemoveProductDropDownMenu.setAdapter(adapter);
+
+        mRemoveProductButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String currentProduct = mRemoveProductDropDownMenu.getSelectedItem().toString();
+
+                Product product = mProductDAO.getProduct(currentProduct.toLowerCase());
+
+                if (product != null) {
+
+                    mProductDAO.delete(product);
+
+                    names.remove(mRemoveProductDropDownMenu.getSelectedItem().toString());
+
+                    adapter.notifyDataSetChanged();
+
+                    Toast.makeText(AdminActivity.this, "Product [ " + currentProduct + " ] removed.",
+                            Toast.LENGTH_LONG).show();
+
+                }else {
+                    Toast.makeText(AdminActivity.this, "An error occurred. Please try again later.",
+                            Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+        mRemoveCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
 
     }
 

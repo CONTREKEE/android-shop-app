@@ -108,7 +108,7 @@
         android:stateListAnimator="@null"
         android:text="Add "
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.743"
+        app:layout_constraintHorizontal_bias="0.746"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_product_page_productDescription_editText" />
 

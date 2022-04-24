@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7b3da26ab544134b33fee2182681bb59",
+    "identityHash": "b09ad5b3b76a22f717a7495dc4eedd44",
     "entities": [
       {
         "tableName": "user_table",
@@ -41,12 +41,62 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "product_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mId` INTEGER NOT NULL, `mProductName` TEXT, `mPrice` REAL NOT NULL, `mLocation` TEXT, `mQuantity` INTEGER NOT NULL, `mDescription` TEXT, PRIMARY KEY(`mId`))",
+        "fields": [
+          {
+            "fieldPath": "mId",
+            "columnName": "mId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mProductName",
+            "columnName": "mProductName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mPrice",
+            "columnName": "mPrice",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mLocation",
+            "columnName": "mLocation",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mQuantity",
+            "columnName": "mQuantity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mDescription",
+            "columnName": "mDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "mId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7b3da26ab544134b33fee2182681bb59')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b09ad5b3b76a22f717a7495dc4eedd44')"
     ]
   }
 }

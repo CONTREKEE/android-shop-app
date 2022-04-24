@@ -6,19 +6,24 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
+import com.kfarris.shop.Product;
 import com.kfarris.shop.User;
 
-@Database(entities = {User.class}, version = 1)
+@Database(entities = {User.class, Product.class}, version = 2)
+@TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "iBay.db";
     public static final String USER_TABLE = "user_table";
+    public static final String PRODUCT_TABLE = "product_table";
 
     private static volatile AppDatabase instance;
     private static final Object LOCK = new Object();
 
     public abstract UserDAO UserDAO();
+    public abstract ProductDAO ProductDAO();
 
     public static AppDatabase getInstance(Context context) {
 
@@ -30,7 +35,9 @@ public abstract class AppDatabase extends RoomDatabase {
 
                     instance = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class,
-                            DATABASE_NAME).build();
+                            DATABASE_NAME)
+                            .fallbackToDestructiveMigration()
+                            .build();
 
                 }
 
