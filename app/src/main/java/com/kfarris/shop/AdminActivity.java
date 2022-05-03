@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -175,6 +176,7 @@ public class AdminActivity extends AppCompatActivity {
             sb.append("Password : ");
             sb.append(user.getPassword() + "\n");
             sb.append("Products Owned : " + "\n");
+            sb.append(user.getProductsOwned().toString().replace("[", "").replace("]", "") + "\n");
             sb.append("- - - - - - - - - - - - - -" + "\n");
 
         }
@@ -286,9 +288,10 @@ public class AdminActivity extends AppCompatActivity {
         mDialogBuilder = new AlertDialog.Builder(this);
         final View dialogView = getLayoutInflater().inflate(R.layout.remove_product_admin_dialog, null);
 
+        AutoCompleteTextView mRemoveProductDropDownMenu = (AutoCompleteTextView) dialogView.findViewById(R.id.remove_product_page_product_dropDownMenu);;
+
         Button mRemoveProductButton = (Button) dialogView.findViewById(R.id.remove_product_page_remove_button);
         Button mRemoveCancelButton = (Button) dialogView.findViewById(R.id.remove_product_page_cancel_button);
-        Spinner mRemoveProductDropDownMenu = (Spinner) dialogView.findViewById(R.id.remove_product_page_product_dropDownMenu);
 
         mDialogBuilder.setView(dialogView);
         dialog = mDialogBuilder.create();
@@ -300,8 +303,11 @@ public class AdminActivity extends AppCompatActivity {
             names.add(product.getProductName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getProductNames());
+        mRemoveProductDropDownMenu.setAdapter(adapter);
 
         mRemoveProductDropDownMenu.setAdapter(adapter);
 
@@ -309,7 +315,7 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String currentProduct = mRemoveProductDropDownMenu.getSelectedItem().toString();
+                String currentProduct = mRemoveProductDropDownMenu.getText().toString();
 
                 Product product = mProductDAO.getProduct(currentProduct.toLowerCase());
 
@@ -317,9 +323,11 @@ public class AdminActivity extends AppCompatActivity {
 
                     mProductDAO.delete(product);
 
-                    names.remove(mRemoveProductDropDownMenu.getSelectedItem().toString());
+                    names.remove(product.getProductName());
 
                     adapter.notifyDataSetChanged();
+
+                    dialog.dismiss();
 
                     Toast.makeText(AdminActivity.this, "Product [ " + currentProduct + " ] removed.",
                             Toast.LENGTH_LONG).show();
@@ -338,6 +346,17 @@ public class AdminActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
+    }
+
+    public ArrayList<String> getProductNames() {
+
+        ArrayList<String> names = new ArrayList<>();
+
+        for (Product product : mProductDAO.getProductsInfo()) {
+            names.add(product.getProductName());
+        }
+        return names;
 
     }
 

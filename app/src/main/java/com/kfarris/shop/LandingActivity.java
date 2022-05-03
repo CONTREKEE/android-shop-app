@@ -1,9 +1,11 @@
 package com.kfarris.shop;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -96,18 +98,36 @@ public class LandingActivity extends AppCompatActivity {
         });
 
         /**
+         * Order history button.
+         * Shows order history of logged in user.
+         */
+        mOrderHistoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = OrderHistoryActivity.intentFactory(getApplicationContext(), username);
+                startActivity(intent);
+            }
+        });
+
+        /**
          * Sign out button.
          * Clears sharedPreferences of the username login info.
          */
         mSignOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                signOutUser();
+            }
+        });
 
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
-                editor.clear();
-                editor.commit();
-
-                Intent intent = new Intent(LandingActivity.this, MainActivity.class);
+        /**
+         * Cancel order button.
+         * Opens page to cancel orders.
+         */
+        mCancelOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = CancelOrderActivity.intentFactory(getApplicationContext(), username);
                 startActivity(intent);
             }
         });
@@ -134,4 +154,31 @@ public class LandingActivity extends AppCompatActivity {
 
 
     }
+
+    private void signOutUser() {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+
+        alertBuilder.setMessage(R.string.sign_out_question);
+
+        alertBuilder.setPositiveButton(getString(R.string.yes),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferences.Editor editor = mSharedPreferences.edit();
+                        editor.clear();
+                        editor.commit();
+
+                        Intent intent = new Intent(LandingActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+        alertBuilder.setNegativeButton(getString(R.string.no),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        alertBuilder.create().show();
+    }
+
 }

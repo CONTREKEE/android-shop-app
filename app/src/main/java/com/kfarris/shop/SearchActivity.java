@@ -1,10 +1,13 @@
 package com.kfarris.shop;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -154,26 +157,26 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (mSelectedProduct != null &&
-                mSelectedProduct.getQuantity() > 0) {
+                if (mSelectedProduct != null) {
 
-                    if (!user.getProductsOwned().contains(mSelectedProduct.getProductName())) {
+                    if (mSelectedProduct.getQuantity() > 0) {
 
-                        mSelectedProduct.setQuantity(mSelectedProduct.getQuantity()-1);
-                        user.getProductsOwned().add(mSelectedProduct.getProductName());
+                        if (!user.getProductsOwned().contains(mSelectedProduct.getProductName())) {
 
-                        mUserDAO.update(user);
-                        mProductDAO.update(mSelectedProduct);
+                            confirmPurchase();
 
-                        mQuantityTextView.setText("In Stock : " + mSelectedProduct.getQuantity());
+                        } else {
+                            Toast.makeText(SearchActivity.this, "You already own this item.",
+                                    Toast.LENGTH_LONG).show();
+                        }
 
-                    }else {
-                        Toast.makeText(SearchActivity.this, "You already own this item!",
+                    } else {
+                        Toast.makeText(SearchActivity.this, "This item is out of stock.",
                                 Toast.LENGTH_LONG).show();
                     }
 
-                }else {
-                    Toast.makeText(SearchActivity.this, "There is no item selected!",
+                } else {
+                    Toast.makeText(SearchActivity.this, "There is no item selected.",
                             Toast.LENGTH_LONG).show();
                 }
 
@@ -183,6 +186,36 @@ public class SearchActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void confirmPurchase() {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+
+        alertBuilder.setMessage(R.string.confirm_purchase);
+
+        alertBuilder.setPositiveButton(getString(R.string.confirm),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mSelectedProduct.setQuantity(mSelectedProduct.getQuantity() - 1);
+                        user.getProductsOwned().add(mSelectedProduct.getProductName());
+
+                        mUserDAO.update(user);
+                        mProductDAO.update(mSelectedProduct);
+
+                        mQuantityTextView.setText("In Stock : " + mSelectedProduct.getQuantity());
+
+                        Toast.makeText(SearchActivity.this, mSelectedProduct.getProductName() + " purchased!", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+        alertBuilder.setNegativeButton(getString(R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        alertBuilder.create().show();
     }
 
     public ArrayList<String> getProductNames() {

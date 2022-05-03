@@ -3,17 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/keega/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/simple_list_item_1.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/activity_admin.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/activity_cancel_order.xml" value="0.22" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/activity_create_account.xml" value="0.2695035460992908" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/activity_landing.xml" value="0.2695035460992908" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/activity_main.xml" value="0.5541666666666667" />
-        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/activity_search.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/activity_order_history.xml" value="0.1" />
+        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/activity_search.xml" value="0.33" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/add_item_dialog.xml" value="0.2695035460992908" />
-        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/add_product_admin_dialog.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/add_product_admin_dialog.xml" value="0.22" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/cancel_order_admin_dialog.xml" value="0.5541666666666667" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/popup.xml" value="0.5541666666666667" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/products_array.xml" value="0.1" />
-        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/remove_product_admin_dialog.xml" value="0.5456410256410257" />
+        <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/remove_product_admin_dialog.xml" value="0.5" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/remove_product_drop_down_text_view.xml" value="0.31354166666666666" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/remove_product_string_array.xml" value="0.1" />
         <entry key="..\:/Users/keega/StudioProjects/android-shop-app/app/src/main/res/layout/view_items_admin_dialog.xml" value="0.5541666666666667" />

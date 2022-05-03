@@ -21,28 +21,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/search_page_itemName_editText"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="48dp"-->
-<!--        android:backgroundTint="@color/black"-->
-<!--        android:ems="10"-->
-<!--        android:hint="@string/item_name"-->
-<!--        android:inputType="textPersonName"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:textColorHint="@color/white"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.497"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/search_page_searchForItem_textView" />-->
-
     <AutoCompleteTextView
         android:id="@+id/search_page_itemSearch_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/white"
         android:ems="10"
         android:hint="@string/item_name"
         android:inputType="textPersonName"
@@ -168,7 +152,7 @@
         android:id="@+id/search_page_buy_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="436dp"
+        android:layout_marginTop="336dp"
         android:backgroundTint="#000000"
         android:text="@string/buy"
         app:layout_constraintEnd_toEndOf="parent"
