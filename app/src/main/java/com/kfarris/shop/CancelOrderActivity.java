@@ -5,11 +5,14 @@ import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.kfarris.shop.DB.AppDatabase;
 import com.kfarris.shop.DB.ProductDAO;
@@ -35,6 +38,10 @@ public class CancelOrderActivity extends AppCompatActivity {
 
     private String mUsername;
 
+    private User mUser;
+
+    private ArrayAdapter<String> mAdapter;
+
 
     public static Intent intentFactory(Context packageContext, String username) {
         Intent intent = new Intent(packageContext, CancelOrderActivity.class);
@@ -58,9 +65,27 @@ public class CancelOrderActivity extends AppCompatActivity {
 
         mUsername = getIntent().getStringExtra(LandingActivity.LOGGED_IN_USERNAME);
 
-        setupDatabases();
+        setupDatabase();
+
+        if (mUsername != null) {
+            mUser = mUserDAO.getUserInfo(mUsername);
+        }
+
         setupItemList();
 
+        /**
+         * Cancel order button.
+         */
+        mCancelOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelItemOrder();
+            }
+        });
+
+        /**
+         * Sends user back to the landing page.
+         */
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,8 +97,39 @@ public class CancelOrderActivity extends AppCompatActivity {
 
     }
 
+
+    /**
+     * Cancels the current selected item.
+     * Removes the item from the user table.
+     * Adds 1 more to the quantity of the item in the product table.
+     */
+    private void cancelItemOrder() {
+        String productName = mOrdersSpinner.getSelectedItem().toString();
+        Product product = mProductDAO.getProduct(productName.toLowerCase());
+        List<String> items = mUser.getProductsOwned();
+        if (product != null) {
+            if (items.contains(productName)) {
+                items.remove(productName);
+                mUser.setProductsOwned(items);
+                mUserDAO.update(mUser);
+
+                System.out.println(mProductDAO.getProductsInfo());
+                product.setQuantity(product.getQuantity() + 1);
+                mProductDAO.update(product);
+
+                Toast.makeText(CancelOrderActivity.this, "Order with item " + productName + " cancelled!", Toast.LENGTH_SHORT).show();
+                mAdapter.remove(productName);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    /**
+     * Updates the items the user ordered.
+     */
     private void itemsOrderedList() {
         ArrayList<String> items = new ArrayList<>();
+        checkForNullItems();
 
         for (String product : mUserDAO.getUserInfo(mUsername).getProductsOwned()) {
             items.add(product);
@@ -81,16 +137,21 @@ public class CancelOrderActivity extends AppCompatActivity {
         mItemsOrdered = items;
     }
 
+    /**
+     * Sets up the spinner for the ordered items.
+     */
     private void setupItemList() {
         itemsOrderedList();
 
-        mOrdersSpinner.setAdapter(new ArrayAdapter<>(this,
-                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
-                mItemsOrdered
-        ));
+        mAdapter = new ArrayAdapter<>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, mItemsOrdered);
+        mAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
+        mOrdersSpinner.setAdapter(mAdapter);
     }
 
-    private void setupDatabases() {
+    /**
+     * Sets up the user and product table.
+     */
+    private void setupDatabase() {
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
                 AppDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
@@ -103,6 +164,26 @@ public class CancelOrderActivity extends AppCompatActivity {
                 .fallbackToDestructiveMigration()
                 .build()
                 .ProductDAO();
+    }
+
+    /**
+     * Checks if the user that has items that do not exist in the product table.
+     */
+    private void checkForNullItems() {
+        List<String> list = mUser.getProductsOwned();
+        int size = list.size();
+        for (int i = 0; i < list.size(); i++) {
+            Product product = mProductDAO.getProduct(list.get(i).toLowerCase());
+
+            if (product == null) {
+                list.remove(i);
+            }
+        }
+
+        if (list.size() != size) {
+            mUser.setProductsOwned(list);
+            mUserDAO.update(mUser);
+        }
     }
 
 }

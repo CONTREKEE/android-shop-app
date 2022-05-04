@@ -29,21 +29,23 @@ public class AdminActivity extends AppCompatActivity {
 
     ActivityAdminBinding binding;
 
-    TextView mUserTextView;
+    private TextView mUserTextView;
 
-    Button mAddAProductButton;
-    Button mViewExistingProductsButton;
-    Button mRemoveAProductButton;
-    Button mViewExistingUsersButton;
-    Button mBackButton;
-    Button mXButton;
+    private Button mAddAProductButton;
+    private Button mViewExistingProductsButton;
+    private Button mRemoveAProductButton;
+    private Button mViewExistingUsersButton;
+    private Button mBackButton;
+    private Button mXButton;
 
-    UserDAO mUserDAO;
-    ProductDAO mProductDAO;
+    private UserDAO mUserDAO;
+    private ProductDAO mProductDAO;
 
     private AlertDialog.Builder mDialogBuilder;
     private AlertDialog dialog;
-    TextView mAllUsersTextView;
+    private TextView mAllUsersTextView;
+
+    private String mUsername;
 
     public static Intent intentFactory(Context packageContext, String username) {
         Intent intent = new Intent(packageContext, AdminActivity.class);
@@ -68,10 +70,74 @@ public class AdminActivity extends AppCompatActivity {
         mViewExistingUsersButton = binding.adminPageViewExistingUsersButton;
         mBackButton = binding.adminPageBackButton;
 
-        String username = getIntent().getStringExtra(LandingActivity.LOGGED_IN_USERNAME);
+        mUsername = getIntent().getStringExtra(LandingActivity.LOGGED_IN_USERNAME);
 
-        mUserTextView.setText("Welcome, " + username + "!");
+        mUserTextView.setText("Welcome, " + mUsername + "!");
 
+        setupDatabase();
+
+        /**
+         * Back button.
+         * Goes back to the landing page.
+         */
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = LandingActivity.intentFactory(getApplicationContext(), mUsername);
+                startActivity(intent);
+            }
+        });
+
+        /**
+         * Show add product dialog
+         */
+        mAddAProductButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addItemDialog();
+            }
+        });
+
+        /**
+         * View existing items dialog.
+         */
+
+        mViewExistingProductsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewAllItemsDialog();
+            }
+        });
+
+        /**
+         * Remove items dialog.
+         */
+
+        mRemoveAProductButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeItemDialog();
+            }
+        });
+
+        /**
+         * Shows all existing users.
+         * Pops up another dialog.
+         */
+
+        mViewExistingUsersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewExistingUsers();
+            }
+        });
+
+    }
+
+    /**
+     * Sets up the user and product table.
+     */
+    private void setupDatabase() {
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
                 AppDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
@@ -84,70 +150,13 @@ public class AdminActivity extends AppCompatActivity {
                 .fallbackToDestructiveMigration()
                 .build()
                 .ProductDAO();
-
-        /**
-         * Back button.
-         * Goes back to the landing page.
-         */
-
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = LandingActivity.intentFactory(getApplicationContext(), username);
-                startActivity(intent);
-
-            }
-        });
-
-        /**
-         * Show add product dialog
-         */
-        mAddAProductButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addProductDialog();
-            }
-        });
-
-        /**
-         * View existing items dialog.
-         */
-
-        mViewExistingProductsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewAllProductsDialog();
-            }
-        });
-
-        /**
-         * Remove items dialog.
-         */
-
-        mRemoveAProductButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeProductDialog();
-            }
-        });
-
-        /**
-         * Shows all existing users.
-         * Pops up another dialog.
-         */
-
-        mViewExistingUsersButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createNewUsersDialog();
-            }
-        });
-
     }
 
-    public void createNewUsersDialog() {
-
+    /**
+     * Shows all existing users username, password, and items purchases
+     * in a dialog.
+     */
+    public void viewExistingUsers() {
         mDialogBuilder = new AlertDialog.Builder(this);
         final View userDialogView = getLayoutInflater().inflate(R.layout.view_users_admin_dialog, null);
         mAllUsersTextView = (TextView) userDialogView.findViewById(R.id.user_popup_allUsersScroll_textView);
@@ -186,7 +195,11 @@ public class AdminActivity extends AppCompatActivity {
 
     }
 
-    public void addProductDialog() {
+    /**
+     * Item add dialog.
+     * An item can be added to the product table.
+     */
+    public void addItemDialog() {
 
         mDialogBuilder = new AlertDialog.Builder(this);
         final View dialogView = getLayoutInflater().inflate(R.layout.add_product_admin_dialog, null);
@@ -222,18 +235,18 @@ public class AdminActivity extends AppCompatActivity {
                         Product product = new Product(name, name.toLowerCase(), price, location, quantity, description);
                         mProductDAO.insert(product);
 
-                        Toast.makeText(AdminActivity.this, "Product [ " + name  + " ] added.",
+                        Toast.makeText(AdminActivity.this, "Product [ " + name + " ] added.",
                                 Toast.LENGTH_LONG).show();
 
                         dialog.dismiss();
 
-                    }else {
-                        Toast.makeText(AdminActivity.this, "Product [ " + name  + " ] already added.",
+                    } else {
+                        Toast.makeText(AdminActivity.this, "Product [ " + name + " ] already added.",
                                 Toast.LENGTH_LONG).show();
                     }
 
 
-                }else {
+                } else {
                     Toast.makeText(AdminActivity.this, "Please fill out all fields.",
                             Toast.LENGTH_LONG).show();
                 }
@@ -251,7 +264,11 @@ public class AdminActivity extends AppCompatActivity {
 
     }
 
-    public void viewAllProductsDialog() {
+    /**
+     * Item dialog.
+     * Shows all items in the product table.
+     */
+    public void viewAllItemsDialog() {
 
         mDialogBuilder = new AlertDialog.Builder(this);
         final View dialogView = getLayoutInflater().inflate(R.layout.view_items_admin_dialog, null);
@@ -283,12 +300,17 @@ public class AdminActivity extends AppCompatActivity {
 
     }
 
-    public void removeProductDialog() {
+    /**
+     * Remove item dialog.
+     * Item can be selected to be deleted from the product table.
+     */
+    public void removeItemDialog() {
 
         mDialogBuilder = new AlertDialog.Builder(this);
         final View dialogView = getLayoutInflater().inflate(R.layout.remove_product_admin_dialog, null);
 
-        AutoCompleteTextView mRemoveProductDropDownMenu = (AutoCompleteTextView) dialogView.findViewById(R.id.remove_product_page_product_dropDownMenu);;
+        AutoCompleteTextView mRemoveProductDropDownMenu = (AutoCompleteTextView) dialogView.findViewById(R.id.remove_product_page_product_dropDownMenu);
+        ;
 
         Button mRemoveProductButton = (Button) dialogView.findViewById(R.id.remove_product_page_remove_button);
         Button mRemoveCancelButton = (Button) dialogView.findViewById(R.id.remove_product_page_cancel_button);
@@ -302,9 +324,6 @@ public class AdminActivity extends AppCompatActivity {
         for (Product product : mProductDAO.getProductsInfo()) {
             names.add(product.getProductName());
         }
-
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getProductNames());
         mRemoveProductDropDownMenu.setAdapter(adapter);
@@ -332,11 +351,10 @@ public class AdminActivity extends AppCompatActivity {
                     Toast.makeText(AdminActivity.this, "Product [ " + currentProduct + " ] removed.",
                             Toast.LENGTH_LONG).show();
 
-                }else {
+                } else {
                     Toast.makeText(AdminActivity.this, "An error occurred. Please try again later.",
                             Toast.LENGTH_LONG).show();
                 }
-
             }
         });
 
@@ -349,6 +367,11 @@ public class AdminActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Returns a list of all item names in the product table.
+     *
+     * @return
+     */
     public ArrayList<String> getProductNames() {
 
         ArrayList<String> names = new ArrayList<>();
@@ -357,7 +380,5 @@ public class AdminActivity extends AppCompatActivity {
             names.add(product.getProductName());
         }
         return names;
-
     }
-
 }

@@ -27,27 +27,29 @@ public class SearchActivity extends AppCompatActivity {
 
     ActivitySearchBinding binding;
 
-    AutoCompleteTextView mSearchForItemEditText;
+    private AutoCompleteTextView mSearchForItemEditText;
 
-    Button mSearchButton;
-    Button mBuyButton;
-    Button mBackButton;
+    private Button mSearchButton;
+    private Button mBuyButton;
+    private Button mBackButton;
 
-    TextView mItemNameTextView;
-    TextView mPriceTextView;
-    TextView mQuantityTextView;
-    TextView mLocationTextView;
-    TextView mProductDetailsLabelTextView;
-    TextView mProductDetailsTextTextView;
+    private TextView mItemNameTextView;
+    private TextView mPriceTextView;
+    private TextView mQuantityTextView;
+    private TextView mLocationTextView;
+    private TextView mProductDetailsLabelTextView;
+    private TextView mProductDetailsTextTextView;
 
-    UserDAO mUserDAO;
-    ProductDAO mProductDAO;
+    private UserDAO mUserDAO;
+    private ProductDAO mProductDAO;
 
-    Product mSelectedProduct;
+    private Product mSelectedProduct;
 
-    String username;
+    private String username;
 
-    User user;
+    private User user;
+
+    private ArrayAdapter mAdapter;
 
     public static Intent intentFactory(Context packageContext, String username) {
         Intent intent = new Intent(packageContext, SearchActivity.class);
@@ -79,18 +81,7 @@ public class SearchActivity extends AppCompatActivity {
 
         mBuyButton.setVisibility(View.INVISIBLE);
 
-        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
-                AppDatabase.DATABASE_NAME)
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build().UserDAO();
-
-        mProductDAO = Room.databaseBuilder(this, AppDatabase.class,
-                AppDatabase.DATABASE_NAME)
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build()
-                .ProductDAO();
+        setupDatabase();
 
         username = getIntent().getStringExtra(LandingActivity.LOGGED_IN_USERNAME);
 
@@ -99,8 +90,8 @@ public class SearchActivity extends AppCompatActivity {
         }
 
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getProductNames());
-        mSearchForItemEditText.setAdapter(adapter);
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getProductNames());
+        mSearchForItemEditText.setAdapter(mAdapter);
 
         /**
          * Back button.
@@ -139,7 +130,7 @@ public class SearchActivity extends AppCompatActivity {
 
                         mSelectedProduct = product;
 
-                    }else {
+                    } else {
                         Toast.makeText(SearchActivity.this, "Item not found.",
                                 Toast.LENGTH_LONG).show();
                     }
@@ -156,38 +147,67 @@ public class SearchActivity extends AppCompatActivity {
         mBuyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (mSelectedProduct != null) {
-
-                    if (mSelectedProduct.getQuantity() > 0) {
-
-                        if (!user.getProductsOwned().contains(mSelectedProduct.getProductName())) {
-
-                            confirmPurchase();
-
-                        } else {
-                            Toast.makeText(SearchActivity.this, "You already own this item.",
-                                    Toast.LENGTH_LONG).show();
-                        }
-
-                    } else {
-                        Toast.makeText(SearchActivity.this, "This item is out of stock.",
-                                Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    Toast.makeText(SearchActivity.this, "There is no item selected.",
-                            Toast.LENGTH_LONG).show();
+                if (canPurchase()) {
+                    confirmPurchase();
                 }
-
             }
         });
-
-
-
-
     }
 
+    /**
+     * Checks if a user is able to purchase the selected item and returns true.
+     * Otherwise returns false.
+     *
+     * @return
+     */
+    private boolean canPurchase() {
+        if (mSelectedProduct != null) {
+
+            if (mSelectedProduct.getQuantity() > 0) {
+
+                if (!user.getProductsOwned().contains(mSelectedProduct.getProductName())) {
+                    return true;
+                } else {
+                    Toast.makeText(SearchActivity.this, "You already own this item.",
+                            Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+            } else {
+                Toast.makeText(SearchActivity.this, "This item is out of stock.",
+                        Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+        } else {
+            Toast.makeText(SearchActivity.this, "There is no item selected.",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
+
+    /**
+     * Sets up user and product table.
+     */
+    private void setupDatabase() {
+        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
+                AppDatabase.DATABASE_NAME)
+                .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
+                .build().UserDAO();
+
+        mProductDAO = Room.databaseBuilder(this, AppDatabase.class,
+                AppDatabase.DATABASE_NAME)
+                .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
+                .build()
+                .ProductDAO();
+    }
+
+    /**
+     * Asks user if they want to confirm their purchase.
+     * If confirmed the purchase will proceed.
+     */
     private void confirmPurchase() {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 
@@ -218,6 +238,11 @@ public class SearchActivity extends AppCompatActivity {
         alertBuilder.create().show();
     }
 
+    /**
+     * Returns a list of all of the product names in the shop.
+     *
+     * @return
+     */
     public ArrayList<String> getProductNames() {
 
         ArrayList<String> names = new ArrayList<>();

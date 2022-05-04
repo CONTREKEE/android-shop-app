@@ -31,13 +31,13 @@ public class LandingActivity extends AppCompatActivity {
     Button mAdminButton;
     Button mSignOutButton;
 
-    String username;
+    String mUsername;
 
     UserDAO mUserDAO;
 
     SharedPreferences mSharedPreferences;
 
-    User user;
+    User mUser;
 
     public static Intent intentFactory(Context packageContext, String username) {
         Intent intent = new Intent(packageContext, LandingActivity.class);
@@ -61,30 +61,9 @@ public class LandingActivity extends AppCompatActivity {
         mAdminButton = binding.landingPageAdminButton;
         mSignOutButton = binding.landingPageSignOutButton;
 
-        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
-                AppDatabase.DATABASE_NAME)
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build().UserDAO();
+        setupDatabase();
+        setupUser();
 
-        mSharedPreferences = getSharedPreferences(MainActivity.mLoginFile, Context.MODE_PRIVATE);
-
-        username = getIntent().getStringExtra(LOGGED_IN_USERNAME);
-
-        if (username != null) {
-
-            user = mUserDAO.getUserInfo(username);
-
-            if (user.getIsAdmin() != 1) {
-                mAdminButton.setVisibility(View.INVISIBLE);
-            }
-
-            String welcomeText = "Welcome, " +
-                    user.getUsername() +
-                    "!";
-            mLandingPageWelcomeUserTextView.setText(welcomeText);
-
-        }
 
         /**
          * Search button.
@@ -92,7 +71,7 @@ public class LandingActivity extends AppCompatActivity {
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = SearchActivity.intentFactory(getApplicationContext(), username);
+                Intent intent = SearchActivity.intentFactory(getApplicationContext(), mUsername);
                 startActivity(intent);
             }
         });
@@ -104,7 +83,7 @@ public class LandingActivity extends AppCompatActivity {
         mOrderHistoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = OrderHistoryActivity.intentFactory(getApplicationContext(), username);
+                Intent intent = OrderHistoryActivity.intentFactory(getApplicationContext(), mUsername);
                 startActivity(intent);
             }
         });
@@ -127,7 +106,7 @@ public class LandingActivity extends AppCompatActivity {
         mCancelOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = CancelOrderActivity.intentFactory(getApplicationContext(), username);
+                Intent intent = CancelOrderActivity.intentFactory(getApplicationContext(), mUsername);
                 startActivity(intent);
             }
         });
@@ -141,20 +120,32 @@ public class LandingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (user.getIsAdmin() == 1) {
+                if (mUser.getIsAdmin() == 1) {
 
-                    Intent intent = AdminActivity.intentFactory(getApplicationContext(), username);
+                    Intent intent = AdminActivity.intentFactory(getApplicationContext(), mUsername);
                     startActivity(intent);
 
                 }
 
             }
         });
-
-
-
     }
 
+    /**
+     * Sets up the user database.
+     */
+    private void setupDatabase() {
+        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
+                AppDatabase.DATABASE_NAME)
+                .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
+                .build().UserDAO();
+    }
+
+    /**
+     * Signs out user and removes the user information from the SharedPreferences.
+     * Asks user to confirm if they want to sign out.
+     */
     private void signOutUser() {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 
@@ -179,6 +170,30 @@ public class LandingActivity extends AppCompatActivity {
                     }
                 });
         alertBuilder.create().show();
+    }
+
+    /**
+     * Sets up logged in user for the landing page.
+     */
+    private void setupUser() {
+        mSharedPreferences = getSharedPreferences(MainActivity.mLoginFile, Context.MODE_PRIVATE);
+
+        mUsername = getIntent().getStringExtra(LOGGED_IN_USERNAME);
+
+        if (mUsername != null) {
+
+            mUser = mUserDAO.getUserInfo(mUsername);
+
+            if (mUser.getIsAdmin() != 1) {
+                mAdminButton.setVisibility(View.INVISIBLE);
+            }
+
+            String welcomeText = "Welcome, " +
+                    mUser.getUsername() +
+                    "!";
+            mLandingPageWelcomeUserTextView.setText(welcomeText);
+
+        }
     }
 
 }

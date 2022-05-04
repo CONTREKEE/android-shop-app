@@ -23,15 +23,17 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
 
-    Button mLoginButton;
-    Button mCreateAccountButton;
+    private Button mLoginButton;
+    private Button mCreateAccountButton;
 
-    EditText mUsernameEditText;
-    EditText mPasswordEditText;
+    private EditText mUsernameEditText;
+    private EditText mPasswordEditText;
 
-    UserDAO mUserDAO;
+    private UserDAO mUserDAO;
 
-    SharedPreferences mSharedPreferences;
+    private SharedPreferences mSharedPreferences;
+
+    private User mUser;
 
     public static final String mLoginFile = "login_status";
     public static final String mUsernamePreference = "username";
@@ -51,78 +53,23 @@ public class MainActivity extends AppCompatActivity {
         mUsernameEditText = binding.loginPageUsernameEditText;
         mPasswordEditText = binding.loginPagePasswordEditText;
 
-        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
-                AppDatabase.DATABASE_NAME)
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build().UserDAO();
+        setupDatabase();
 
-        mSharedPreferences = getSharedPreferences(mLoginFile, Context.MODE_PRIVATE);
-
-        if (mSharedPreferences.contains(mUsernamePreference) &&
-                mSharedPreferences.contains(mPasswordPreference)) {
-
-            String username = mSharedPreferences.getString(mUsernamePreference, null);
-
-            if (username != null) {
-
-                User user = mUserDAO.getUserInfo(username);
-
-                if (user != null) {
-
-                if (user.getPassword().equals(mSharedPreferences.getString(mPasswordPreference, null))) {
-
-                    Intent intent = LandingActivity.intentFactory(getApplicationContext(),
-                            username);
-                    startActivity(intent);
-                    }
-                }
-            }
-        }
-
+        checkIfLoggedIn();
 
         /**
          * Login button.
-         * Checks if username is in database.
-         * Then checks if username and password match.
          */
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (mUsernameEditText.getText().toString().length() > 0
-                        && mPasswordEditText.getText().toString().length() > 0) {
-
-                    User user = mUserDAO.getUserInfo(mUsernameEditText.getText().toString().toLowerCase());
-
-                    if (user != null) {
-
-                        if (mUsernameEditText.getText().toString().equalsIgnoreCase(user.getUsername()) &&
-                                mPasswordEditText.getText().toString().equals(user.getPassword())) {
-
-                            SharedPreferences.Editor editor = mSharedPreferences.edit();
-                            editor.putString(mUsernamePreference, user.getUsername());
-                            editor.putString(mPasswordPreference, user.getPassword());
-                            editor.commit();
-
-                            Toast.makeText(MainActivity.this, "Login Success!",
-                                    Toast.LENGTH_LONG).show();
-
-                            Intent intent = LandingActivity.intentFactory(getApplicationContext(), user.getUsername());
-                            startActivity(intent);
-
-                        }
-
-                    }else {
-                        Toast.makeText(MainActivity.this, "Username or password is invalid.",
-                                Toast.LENGTH_LONG).show();
-                    }
-
-                }
-
+                loginUser();
             }
         });
 
+        /**
+         * Sends user to the create account page.
+         */
         mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,6 +84,86 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Sets up the user table.
+     */
+    private void setupDatabase() {
+        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
+                AppDatabase.DATABASE_NAME)
+                .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
+                .build().UserDAO();
+    }
+
+    /**
+     * Checks if a user was logged in when the
+     * app was open previously.
+     */
+    private void checkIfLoggedIn() {
+        mSharedPreferences = getSharedPreferences(mLoginFile, Context.MODE_PRIVATE);
+
+        if (mSharedPreferences.contains(mUsernamePreference) &&
+                mSharedPreferences.contains(mPasswordPreference)) {
+
+            String username = mSharedPreferences.getString(mUsernamePreference, null);
+
+            if (username != null) {
+
+                User user = mUserDAO.getUserInfo(username);
+
+                if (user != null) {
+
+                    if (user.getPassword().equals(mSharedPreferences.getString(mPasswordPreference, null))) {
+
+                        Intent intent = LandingActivity.intentFactory(getApplicationContext(),
+                                username);
+                        startActivity(intent);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Tries to log in user with entered information
+     * in the username and password fields.
+     */
+    private void loginUser() {
+        if (mUsernameEditText.getText().toString().length() > 0
+                && mPasswordEditText.getText().toString().length() > 0) {
+
+            mUser = mUserDAO.getUserInfo(mUsernameEditText.getText().toString().toLowerCase());
+
+            if (mUser != null) {
+
+                if (mUsernameEditText.getText().toString().equalsIgnoreCase(mUser.getUsername()) &&
+                        mPasswordEditText.getText().toString().equals(mUser.getPassword())) {
+
+                    SharedPreferences.Editor editor = mSharedPreferences.edit();
+                    editor.putString(mUsernamePreference, mUser.getUsername());
+                    editor.putString(mPasswordPreference, mUser.getPassword());
+                    editor.commit();
+
+                    Toast.makeText(MainActivity.this, "Login Success!",
+                            Toast.LENGTH_LONG).show();
+
+                    Intent intent = LandingActivity.intentFactory(getApplicationContext(), mUser.getUsername());
+                    startActivity(intent);
+
+                }
+
+            } else {
+                Toast.makeText(MainActivity.this, "Username or password is invalid.",
+                        Toast.LENGTH_LONG).show();
+            }
+
+        }
+    }
+
+    /**
+     * Creates two users [testuser1, admin2] if they
+     * do not exist in the user table.
+     */
     public void createDefaultUsers() {
 
         if (mUserDAO.getUserInfo("testuser1") == null) {

@@ -52,7 +52,85 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
         mUsername = getIntent().getStringExtra(LandingActivity.LOGGED_IN_USERNAME);
 
+        setupDatabase();
 
+        if (mUsername != null) {
+            mUser = mUserDAO.getUserInfo(mUsername);
+        }
+
+        updateOrdersDisplay();
+
+        /**
+         * Sends user back to the landing page.
+         */
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = LandingActivity.intentFactory(getApplicationContext(), mUsername);
+                startActivity(intent);
+
+            }
+        });
+
+    }
+
+    /**
+     * Updates the display for the items the user ordered.
+     */
+    private void updateOrdersDisplay() {
+        checkForNullItems();
+
+        List<String> list = mUser.getProductsOwned();
+
+        if (list.size() > 0) {
+
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < list.size(); i++) {
+
+                Product product = mProductDAO.getProduct(list.get(i).toLowerCase());
+
+                sb.append(product.getProductName() + "\n");
+                sb.append("You paid : $" + product.getPrice() + "\n");
+                sb.append("Shipping from : " + product.getLocation() + "\n");
+                sb.append("Product info : \n");
+                sb.append(product.getDescription() + "\n");
+                sb.append("- - - - - - - - - - - - - - - -\n");
+
+
+            }
+
+            if (sb.toString().length() > 0) {
+                mOrderHistoryTextView.setText(sb.toString());
+            }
+        }
+    }
+
+    /**
+     * Checks if the user that has items that do not exist in the product table.
+     */
+    private void checkForNullItems() {
+        List<String> list = mUser.getProductsOwned();
+        int size = list.size();
+        for (int i = 0; i < list.size(); i++) {
+            Product product = mProductDAO.getProduct(list.get(i).toLowerCase());
+
+            if (product == null) {
+                list.remove(i);
+            }
+        }
+
+        if (list.size() != size) {
+            mUser.setProductsOwned(list);
+            mUserDAO.update(mUser);
+        }
+    }
+
+    /**
+     * Sets up the user and product table.
+     */
+    private void setupDatabase() {
         mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
                 AppDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
@@ -65,51 +143,5 @@ public class OrderHistoryActivity extends AppCompatActivity {
                 .fallbackToDestructiveMigration()
                 .build()
                 .ProductDAO();
-
-        if (mUsername != null) {
-            mUser = mUserDAO.getUserInfo(mUsername);
-        }
-
-        List<String> list = mUser.getProductsOwned();
-
-        if (list.size() > 0) {
-
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < list.size(); i++) {
-
-                Product product = mProductDAO.getProduct(list.get(i).toLowerCase());
-
-                if (product == null) {
-                    list.remove(i);
-                    continue;
-                }
-
-                sb.append(product.getProductName() + "\n");
-                sb.append("You paid : $" + product.getPrice() + "\n");
-                sb.append("Shipping from : " + product.getLocation() + "\n");
-                sb.append("Product info : \n");
-                sb.append(product.getDescription() + "\n");
-                sb.append("- - - - - - - - - - - - - - - -\n");
-
-
-            }
-            mUserDAO.update(mUser);
-            if (sb.toString().length() > 0) {
-                mOrderHistoryTextView.setText(sb.toString());
-            }
-        }
-
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = LandingActivity.intentFactory(getApplicationContext(), mUsername);
-                startActivity(intent);
-
-            }
-        });
-
-
     }
 }

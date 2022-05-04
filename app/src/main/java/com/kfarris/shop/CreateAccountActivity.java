@@ -21,13 +21,13 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     ActivityCreateAccountBinding binding;
 
-    EditText mCreateAccountUsernameTextEdit;
-    EditText mCreateAccountPasswordTextEdit;
+    private EditText mCreateAccountUsernameTextEdit;
+    private EditText mCreateAccountPasswordTextEdit;
 
-    Button mCreateAccountButton;
-    Button mBackButton;
+    private Button mCreateAccountButton;
+    private Button mBackButton;
 
-    UserDAO mUserDAO;
+    private UserDAO mUserDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +44,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         mCreateAccountButton = binding.createAccountPageCreateButton;
         mBackButton = binding.createAccountPageBackButton;
 
-        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
-                AppDatabase.DATABASE_NAME)
-                .allowMainThreadQueries()
-                .build().UserDAO();
+        setupDatabase();
 
         /**
          * Back button.
@@ -84,12 +81,12 @@ public class CreateAccountActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
                         startActivity(intent);
-                    }else {
+                    } else {
                         Toast.makeText(CreateAccountActivity.this, "Account already exists!",
                                 Toast.LENGTH_LONG).show();
                     }
 
-                }else {
+                } else {
                     Toast.makeText(CreateAccountActivity.this, "Fill out all fields.",
                             Toast.LENGTH_LONG).show();
                 }
@@ -97,8 +94,12 @@ public class CreateAccountActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-
-
+    private void setupDatabase() {
+        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
+                AppDatabase.DATABASE_NAME)
+                .allowMainThreadQueries()
+                .build().UserDAO();
     }
 }
