@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.kfarris.shop.DB.AppDatabase;
+import com.kfarris.shop.DB.GetDatabases;
+import com.kfarris.shop.DB.ProductDAO;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivityMainBinding;
 
@@ -85,17 +87,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the user table.
-     */
-    private void setupDatabase() {
-        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
-                AppDatabase.DATABASE_NAME)
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build().UserDAO();
-    }
-
-    /**
      * Checks if a user was logged in when the
      * app was open previously.
      */
@@ -158,6 +149,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    /**
+     * Sets up the user table.
+     */
+    private void setupDatabase() {
+        mUserDAO = GetDatabases.userDatabase(this);
     }
 
     /**

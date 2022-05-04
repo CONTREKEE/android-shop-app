@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kfarris.shop.DB.AppDatabase;
+import com.kfarris.shop.DB.GetDatabases;
 import com.kfarris.shop.DB.ProductDAO;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivitySearchBinding;
@@ -187,21 +188,11 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up user and product table.
+     * Sets up the user and product table.
      */
     private void setupDatabase() {
-        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
-                AppDatabase.DATABASE_NAME)
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build().UserDAO();
-
-        mProductDAO = Room.databaseBuilder(this, AppDatabase.class,
-                AppDatabase.DATABASE_NAME)
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build()
-                .ProductDAO();
+        mUserDAO = GetDatabases.userDatabase(this);
+        mProductDAO = GetDatabases.productDatabase(this);
     }
 
     /**

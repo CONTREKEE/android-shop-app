@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.kfarris.shop.DB.AppDatabase;
+import com.kfarris.shop.DB.GetDatabases;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivityLandingBinding;
 
@@ -132,14 +133,10 @@ public class LandingActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the user database.
+     * Sets up the user table.
      */
     private void setupDatabase() {
-        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
-                AppDatabase.DATABASE_NAME)
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build().UserDAO();
+        mUserDAO = GetDatabases.userDatabase(this);
     }
 
     /**

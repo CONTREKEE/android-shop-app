@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kfarris.shop.DB.AppDatabase;
+import com.kfarris.shop.DB.GetDatabases;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivityCreateAccountBinding;
 
@@ -96,10 +97,10 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets up the user table.
+     */
     private void setupDatabase() {
-        mUserDAO = Room.databaseBuilder(this, AppDatabase.class,
-                AppDatabase.DATABASE_NAME)
-                .allowMainThreadQueries()
-                .build().UserDAO();
+        mUserDAO = GetDatabases.userDatabase(this);
     }
 }
