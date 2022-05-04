@@ -3,6 +3,7 @@ package com.kfarris.shop;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +30,11 @@ public class CreateAccountActivity extends AppCompatActivity {
     private Button mBackButton;
 
     private UserDAO mUserDAO;
+
+    public static Intent intentFactory(Context packageContext) {
+        Intent intent = new Intent(packageContext, CreateAccountActivity.class);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

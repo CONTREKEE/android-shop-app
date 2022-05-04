@@ -7,7 +7,9 @@ import androidx.room.Room;
 public class GetDatabases {
 
     /**
-     * Sets up the user table.
+     * Returns UserDAO.
+     * @param context
+     * @return
      */
     public static UserDAO userDatabase(Context context) {
         UserDAO mUserDAO = Room.databaseBuilder(context, AppDatabase.class,
@@ -19,7 +21,9 @@ public class GetDatabases {
     }
 
     /**
-     * Sets up the item table.
+     * Returns ProductDAO.
+     * @param context
+     * @return
      */
     public static ProductDAO productDatabase(Context context) {
         ProductDAO mProductDAO = Room.databaseBuilder(context, AppDatabase.class,

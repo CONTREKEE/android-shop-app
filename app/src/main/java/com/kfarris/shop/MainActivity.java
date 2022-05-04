@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private User mUser;
 
-    public static final String mLoginFile = "login_status";
+    public static final String LOGIN_INFO = "login_status";
     public static final String mUsernamePreference = "username";
     public static final String mPasswordPreference = "password";
 
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(MainActivity.this, CreateAccountActivity.class);
+                Intent intent = CreateAccountActivity.intentFactory(getApplicationContext());
                 startActivity(intent);
 
             }
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
      * app was open previously.
      */
     private void checkIfLoggedIn() {
-        mSharedPreferences = getSharedPreferences(mLoginFile, Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(LOGIN_INFO, Context.MODE_PRIVATE);
 
         if (mSharedPreferences.contains(mUsernamePreference) &&
                 mSharedPreferences.contains(mPasswordPreference)) {

@@ -173,7 +173,7 @@ public class LandingActivity extends AppCompatActivity {
      * Sets up logged in user for the landing page.
      */
     private void setupUser() {
-        mSharedPreferences = getSharedPreferences(MainActivity.mLoginFile, Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences(MainActivity.LOGIN_INFO, Context.MODE_PRIVATE);
 
         mUsername = getIntent().getStringExtra(LOGGED_IN_USERNAME);
 
