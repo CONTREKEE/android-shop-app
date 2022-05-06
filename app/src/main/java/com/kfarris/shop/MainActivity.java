@@ -142,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = LandingActivity.intentFactory(getApplicationContext(), mUser.getUsername());
                     startActivity(intent);
 
+                }else {
+                    Toast.makeText(MainActivity.this, "Username or password is invalid.",
+                            Toast.LENGTH_LONG).show();
                 }
 
             } else {

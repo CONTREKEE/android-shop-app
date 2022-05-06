@@ -130,7 +130,6 @@ public class LandingActivity extends AppCompatActivity {
             signOutUser();
         }else if (item.getItemId() == R.id.delete_account_userMenu) {
             deleteAccount();
-            forceSignOutUser();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -189,12 +188,31 @@ public class LandingActivity extends AppCompatActivity {
     }
     
     private void deleteAccount() {
-        if (mUser != null) {
-            mUserDAO.delete(mUser);
-            Toast.makeText(this, "Account deleted!", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(this, "An error occurred while deleting account.", Toast.LENGTH_SHORT).show();
-        }
+
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+
+        alertBuilder.setMessage(R.string.delete_account_question);
+
+        alertBuilder.setPositiveButton(getString(R.string.yes),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (mUser != null) {
+                            forceSignOutUser();
+                            mUserDAO.delete(mUser);
+                            Toast.makeText(LandingActivity.this, "Account deleted!", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(LandingActivity.this, "An error occurred while deleting account.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        alertBuilder.setNegativeButton(getString(R.string.no),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        alertBuilder.create().show();
     }
 
     /**

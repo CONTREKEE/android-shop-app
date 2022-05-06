@@ -14,6 +14,7 @@
     <string name="admin">Admin</string>
     <string name="sign_out">Sign Out</string>
     <string name="sign_out_question">Sign Out?</string>
+    <string name="delete_account_question">Delete Account?</string>
     <string name="create">Create</string>
     <string name="confirm_purchase">Confirm Purchase</string>
     <string name="confirm">Confirm</string>
