@@ -5,23 +5,23 @@ import androidx.room.PrimaryKey;
 
 import com.kfarris.shop.DB.AppDatabase;
 
-@Entity(tableName = AppDatabase.PRODUCT_TABLE)
-public class Product {
+@Entity(tableName = AppDatabase.ITEM_TABLE)
+public class Item {
 
     @PrimaryKey(autoGenerate = true)
     private int mId;
 
 
-    private String mProductName;
-    private String mProductNameLowerCase;
+    private String mItemName;
+    private String mItemNameLowerCase;
     private double mPrice;
     private String mLocation;
     private int mQuantity;
     private String mDescription;
 
-    public Product(String productName, String productNameLowerCase, double price, String location, int quantity, String description) {
-        mProductName = productName;
-        mProductNameLowerCase = productNameLowerCase.toLowerCase();
+    public Item(String itemName, String itemNameLowerCase, double price, String location, int quantity, String description) {
+        mItemName = itemName;
+        mItemNameLowerCase = itemNameLowerCase.toLowerCase();
         mPrice = price;
         mLocation = location;
         mQuantity = quantity;
@@ -36,20 +36,20 @@ public class Product {
         mId = id;
     }
 
-    public String getProductName() {
-        return mProductName;
+    public String getItemName() {
+        return mItemName;
     }
 
-    public void setProductName(String productName) {
-        mProductName = productName;
+    public void setItemName(String itemName) {
+        mItemName = itemName;
     }
 
-    public String getProductNameLowerCase() {
-        return mProductNameLowerCase;
+    public String getItemNameLowerCase() {
+        return mItemNameLowerCase;
     }
 
-    public void setProductNameLowerCase(String productNameLowerCase) {
-        mProductNameLowerCase = productNameLowerCase;
+    public void setItemNameLowerCase(String itemNameLowerCase) {
+        mItemNameLowerCase = itemNameLowerCase;
     }
 
     public double getPrice() {
@@ -86,12 +86,12 @@ public class Product {
 
     @Override
     public String toString() {
-        String productInfo = getProductName() + "\n" + "Price : $" + getPrice()
+        String itemInfo = getItemName() + "\n" + "Price : $" + getPrice()
                 + "\n" + "Shipping from : " + getLocation() +
                 "\nCurrent Quantity : " + getQuantity() + "\n" +
-                "Product Info : \n"
+                "Item Info : \n"
                 + getDescription();
-        return productInfo;
+        return itemInfo;
     }
 
 }

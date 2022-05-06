@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="@string/all_products"
+        android:text="@string/all_items"
         android:textColor="@color/white"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/all_products_page_allProducts_textView"
+        android:id="@+id/all_items_page_allItems_textView"
         android:layout_width="305dp"
         android:layout_height="452dp"
         android:layout_marginTop="8dp"
@@ -32,7 +32,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
-        android:id="@+id/all_products_page_dismiss_button"
+        android:id="@+id/all_items_page_dismiss_button"
         android:layout_width="103dp"
         android:layout_height="43dp"
         android:backgroundTint="#005293"
@@ -43,6 +43,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.993"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/all_products_page_allProducts_textView"
+        app:layout_constraintTop_toBottomOf="@+id/all_items_page_allItems_textView"
         app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

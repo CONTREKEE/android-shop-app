@@ -7,60 +7,60 @@
     android:background="#005293">
 
     <EditText
-        android:id="@+id/add_product_page_productName_editText"
+        android:id="@+id/add_item_page_itemName_editText"
         android:layout_width="246dp"
         android:layout_height="52dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/white"
         android:ems="10"
-        android:hint="@string/product_name"
+        android:hint="@string/item_name"
         android:inputType="textPersonName"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_product_page_addItem_textView" />
+        app:layout_constraintTop_toBottomOf="@+id/add_item_page_addItem_textView" />
 
     <EditText
-        android:id="@+id/add_product_page_productLocation_editText"
+        android:id="@+id/add_item_page_itemLocation_editText"
         android:layout_width="246dp"
         android:layout_height="52dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/white"
         android:ems="10"
-        android:hint="@string/product_location"
+        android:hint="@string/item_location"
         android:inputType="textPersonName"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_product_page_productPrice_editText" />
+        app:layout_constraintTop_toBottomOf="@+id/add_item_page_itemPrice_editText" />
 
     <EditText
-        android:id="@+id/add_product_page_productQuantity_editText"
+        android:id="@+id/add_item_page_itemQuantity_editText"
         android:layout_width="246dp"
         android:layout_height="52dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/white"
         android:ems="10"
-        android:hint="@string/product_quantity"
+        android:hint="@string/item_quantity"
         android:inputType="number"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_product_page_productLocation_editText" />
+        app:layout_constraintTop_toBottomOf="@+id/add_item_page_itemLocation_editText" />
 
     <EditText
-        android:id="@+id/add_product_page_productPrice_editText"
+        android:id="@+id/add_item_page_itemPrice_editText"
         android:layout_width="246dp"
         android:layout_height="52dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="@string/product_price"
+        android:hint="@string/item_price"
         android:inputType="number|numberDecimal"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
@@ -68,30 +68,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_product_page_productName_editText" />
+        app:layout_constraintTop_toBottomOf="@+id/add_item_page_itemName_editText" />
 
     <EditText
-        android:id="@+id/add_product_page_productDescription_editText"
+        android:id="@+id/add_item_page_itemDescription_editText"
         android:layout_width="246dp"
         android:layout_height="52dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/white"
         android:ems="10"
-        android:hint="@string/product_description"
+        android:hint="@string/item_description"
         android:inputType="textPersonName"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_product_page_productQuantity_editText" />
+        app:layout_constraintTop_toBottomOf="@+id/add_item_page_itemQuantity_editText" />
 
     <TextView
-        android:id="@+id/add_product_page_addItem_textView"
+        android:id="@+id/add_item_page_addItem_textView"
         android:layout_width="245dp"
         android:layout_height="99dp"
         android:layout_marginTop="16dp"
-        android:text="@string/product_information"
+        android:text="@string/item_information"
         android:gravity="center"
         android:textSize="30sp"
         android:textColor="@color/white"
@@ -100,7 +100,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
-        android:id="@+id/add_product_page_addProduct_button"
+        android:id="@+id/add_item_page_additem_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -110,10 +110,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.746"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_product_page_productDescription_editText" />
+        app:layout_constraintTop_toBottomOf="@+id/add_item_page_itemDescription_editText" />
 
     <Button
-        android:id="@+id/add_product_page_cancelProduct_button"
+        android:id="@+id/add_item_page_cancelitem_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -123,5 +123,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.261"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_product_page_productDescription_editText" />
+        app:layout_constraintTop_toBottomOf="@+id/add_item_page_itemDescription_editText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

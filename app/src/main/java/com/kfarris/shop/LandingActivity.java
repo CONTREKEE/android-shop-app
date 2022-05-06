@@ -1,5 +1,6 @@
 package com.kfarris.shop;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
@@ -9,9 +10,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kfarris.shop.DB.AppDatabase;
 import com.kfarris.shop.DB.GetDatabases;
@@ -30,7 +35,6 @@ public class LandingActivity extends AppCompatActivity {
     Button mOrderHistoryButton;
     Button mCancelOrderButton;
     Button mAdminButton;
-    Button mSignOutButton;
 
     String mUsername;
 
@@ -60,7 +64,6 @@ public class LandingActivity extends AppCompatActivity {
         mOrderHistoryButton = binding.landingPageOrderHistoryButton;
         mCancelOrderButton = binding.landingPageCancelOrderButton;
         mAdminButton = binding.landingPageAdminButton;
-        mSignOutButton = binding.landingPageSignOutButton;
 
         setupDatabase();
         setupUser();
@@ -90,17 +93,6 @@ public class LandingActivity extends AppCompatActivity {
         });
 
         /**
-         * Sign out button.
-         * Clears sharedPreferences of the username login info.
-         */
-        mSignOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signOutUser();
-            }
-        });
-
-        /**
          * Cancel order button.
          * Opens page to cancel orders.
          */
@@ -121,7 +113,7 @@ public class LandingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (mUser.getIsAdmin() == 1) {
+                if (MainActivity.isAdmin(mUser)) {
 
                     Intent intent = AdminActivity.intentFactory(getApplicationContext(), mUsername);
                     startActivity(intent);
@@ -130,6 +122,24 @@ public class LandingActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.sign_out_userMenu) {
+            signOutUser();
+        }else if (item.getItemId() == R.id.delete_account_userMenu) {
+            deleteAccount();
+            forceSignOutUser();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user_menu, menu);
+        return true;
     }
 
     /**
@@ -169,6 +179,24 @@ public class LandingActivity extends AppCompatActivity {
         alertBuilder.create().show();
     }
 
+    private void forceSignOutUser() {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.clear();
+        editor.commit();
+
+        Intent intent = new Intent(LandingActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+    
+    private void deleteAccount() {
+        if (mUser != null) {
+            mUserDAO.delete(mUser);
+            Toast.makeText(this, "Account deleted!", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "An error occurred while deleting account.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /**
      * Sets up logged in user for the landing page.
      */
@@ -181,7 +209,7 @@ public class LandingActivity extends AppCompatActivity {
 
             mUser = mUserDAO.getUserInfo(mUsername);
 
-            if (mUser.getIsAdmin() != 1) {
+            if (!MainActivity.isAdmin(mUser)) {
                 mAdminButton.setVisibility(View.INVISIBLE);
             }
 

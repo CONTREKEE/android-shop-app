@@ -21,17 +21,17 @@ public class GetDatabases {
     }
 
     /**
-     * Returns ProductDAO.
+     * Returns ItemDAO.
      * @param context
      * @return
      */
-    public static ProductDAO productDatabase(Context context) {
-        ProductDAO mProductDAO = Room.databaseBuilder(context, AppDatabase.class,
+    public static ItemDAO itemDatabase(Context context) {
+        ItemDAO mItemDAO = Room.databaseBuilder(context, AppDatabase.class,
                 AppDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
-                .build().ProductDAO();
-        return mProductDAO;
+                .build().ItemDAO();
+        return mItemDAO;
     }
 
 }

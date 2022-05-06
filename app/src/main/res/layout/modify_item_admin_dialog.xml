@@ -7,11 +7,11 @@
     android:background="#005293">
 
     <TextView
-        android:id="@+id/remove_product_page_removeProduct_textView"
+        android:id="@+id/modify_item_page_modifyItem_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/remove_product"
+        android:text="@string/modify_an_item"
         android:textColor="@color/white"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,19 +19,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/remove_product_page_selectAProductToRemove_textView"
+        android:id="@+id/modify_item_page_selectAnItemTomodify_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:textColor="@color/white"
-        android:text="@string/select_a_product_to_remove"
+        android:text="@string/select_a_item"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/remove_product_page_removeProduct_textView" />
+        app:layout_constraintTop_toBottomOf="@+id/modify_item_page_modifyItem_textView" />
 
     <AutoCompleteTextView
-        android:id="@+id/remove_product_page_product_dropDownMenu"
+        android:id="@+id/modify_item_page_item_dropDownMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -44,23 +44,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/remove_product_page_selectAProductToRemove_textView" />
+        app:layout_constraintTop_toBottomOf="@+id/modify_item_page_selectAnItemTomodify_textView" />
 
     <Button
-        android:id="@+id/remove_product_page_remove_button"
+        android:id="@+id/modify_item_page_modify_button"
         android:layout_width="107dp"
         android:layout_height="41dp"
         android:layout_marginTop="20dp"
         android:backgroundTint="#005293"
         android:stateListAnimator="@null"
-        android:text="@string/remove"
+        android:text="@string/modify"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.813"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/remove_product_page_product_dropDownMenu" />
+        app:layout_constraintTop_toBottomOf="@+id/modify_item_page_item_dropDownMenu" />
 
     <Button
-        android:id="@+id/remove_product_page_cancel_button"
+        android:id="@+id/modify_item_page_cancel_button"
         android:layout_width="107dp"
         android:layout_height="41dp"
         android:layout_marginTop="20dp"
@@ -70,5 +70,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.194"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/remove_product_page_product_dropDownMenu" />
+        app:layout_constraintTop_toBottomOf="@+id/modify_item_page_item_dropDownMenu" />
 </androidx.constraintlayout.widget.ConstraintLayout>

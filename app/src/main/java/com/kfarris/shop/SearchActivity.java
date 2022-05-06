@@ -2,12 +2,10 @@ package com.kfarris.shop;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,13 +14,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kfarris.shop.DB.AppDatabase;
 import com.kfarris.shop.DB.GetDatabases;
-import com.kfarris.shop.DB.ProductDAO;
+import com.kfarris.shop.DB.ItemDAO;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivitySearchBinding;
-
-import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -38,13 +33,13 @@ public class SearchActivity extends AppCompatActivity {
     private TextView mPriceTextView;
     private TextView mQuantityTextView;
     private TextView mLocationTextView;
-    private TextView mProductDetailsLabelTextView;
-    private TextView mProductDetailsTextTextView;
+    private TextView mItemDetailsLabelTextView;
+    private TextView mItemDetailsTextTextView;
 
     private UserDAO mUserDAO;
-    private ProductDAO mProductDAO;
+    private ItemDAO mItemDAO;
 
-    private Product mSelectedProduct;
+    private Item mSelectedItem;
 
     private String username;
 
@@ -77,8 +72,8 @@ public class SearchActivity extends AppCompatActivity {
         mPriceTextView = binding.searchPagePriceTextView;
         mQuantityTextView = binding.searchPageStockTextView;
         mLocationTextView = binding.searchPageShippingTextView;
-        mProductDetailsLabelTextView = binding.searchPageProductDetailsLabelTextView;
-        mProductDetailsTextTextView = binding.searchPageProductDetailsTextTextView;
+        mItemDetailsLabelTextView = binding.searchPageItemDetailsLabelTextView;
+        mItemDetailsTextTextView = binding.searchPageItemDetailsTextTextView;
 
         mBuyButton.setVisibility(View.INVISIBLE);
 
@@ -91,7 +86,7 @@ public class SearchActivity extends AppCompatActivity {
         }
 
 
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getProductNames());
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, MainActivity.getAllItemNames(mItemDAO));
         mSearchForItemEditText.setAdapter(mAdapter);
 
         /**
@@ -107,7 +102,7 @@ public class SearchActivity extends AppCompatActivity {
 
         /**
          * Search button.
-         * Fills out information about the product.
+         * Fills out information about the item.
          */
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,20 +111,20 @@ public class SearchActivity extends AppCompatActivity {
                 if (mSearchForItemEditText.getText().toString().length() > 0) {
 
                     String prodcutName = mSearchForItemEditText.getText().toString();
-                    Product product = mProductDAO.getProduct(prodcutName.toLowerCase());
+                    Item item = mItemDAO.getItem(prodcutName.toLowerCase());
 
-                    if (product != null) {
+                    if (item != null) {
 
                         mBuyButton.setVisibility(View.VISIBLE);
-                        mItemNameTextView.setText(product.getProductName());
-                        mPriceTextView.setText("Price : $" + product.getPrice());
-                        mQuantityTextView.setText("In Stock : " + product.getQuantity());
-                        mLocationTextView.setText("Shipping From : " + product.getLocation());
+                        mItemNameTextView.setText(item.getItemName());
+                        mPriceTextView.setText("Price : $" + item.getPrice());
+                        mQuantityTextView.setText("In Stock : " + item.getQuantity());
+                        mLocationTextView.setText("Shipping From : " + item.getLocation());
 
-                        mProductDetailsLabelTextView.setText("Item Details : ");
-                        mProductDetailsTextTextView.setText(product.getDescription());
+                        mItemDetailsLabelTextView.setText("Item Details : ");
+                        mItemDetailsTextTextView.setText(item.getDescription());
 
-                        mSelectedProduct = product;
+                        mSelectedItem = item;
 
                     } else {
                         Toast.makeText(SearchActivity.this, "Item not found.",
@@ -143,7 +138,7 @@ public class SearchActivity extends AppCompatActivity {
 
         /**
          * Buy button.
-         * Tries to buy current selected product.
+         * Tries to buy current selected item.
          */
         mBuyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,11 +157,11 @@ public class SearchActivity extends AppCompatActivity {
      * @return
      */
     private boolean canPurchase() {
-        if (mSelectedProduct != null) {
+        if (mSelectedItem != null) {
 
-            if (mSelectedProduct.getQuantity() > 0) {
+            if (mSelectedItem.getQuantity() > 0) {
 
-                if (!user.getProductsOwned().contains(mSelectedProduct.getProductName())) {
+                if (!user.getItemOwned().contains(mSelectedItem.getItemName())) {
                     return true;
                 } else {
                     Toast.makeText(SearchActivity.this, "You already own this item.",
@@ -188,11 +183,11 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the user and product table.
+     * Sets up the user and item table.
      */
     private void setupDatabase() {
         mUserDAO = GetDatabases.userDatabase(this);
-        mProductDAO = GetDatabases.productDatabase(this);
+        mItemDAO = GetDatabases.itemDatabase(this);
     }
 
     /**
@@ -208,15 +203,15 @@ public class SearchActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mSelectedProduct.setQuantity(mSelectedProduct.getQuantity() - 1);
-                        user.getProductsOwned().add(mSelectedProduct.getProductName());
+                        mSelectedItem.setQuantity(mSelectedItem.getQuantity() - 1);
+                        user.getItemOwned().add(mSelectedItem.getItemName());
 
                         mUserDAO.update(user);
-                        mProductDAO.update(mSelectedProduct);
+                        mItemDAO.update(mSelectedItem);
 
-                        mQuantityTextView.setText("In Stock : " + mSelectedProduct.getQuantity());
+                        mQuantityTextView.setText("In Stock : " + mSelectedItem.getQuantity());
 
-                        Toast.makeText(SearchActivity.this, mSelectedProduct.getProductName() + " purchased!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, mSelectedItem.getItemName() + " purchased!", Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -227,22 +222,6 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
         alertBuilder.create().show();
-    }
-
-    /**
-     * Returns a list of all of the product names in the shop.
-     *
-     * @return
-     */
-    public ArrayList<String> getProductNames() {
-
-        ArrayList<String> names = new ArrayList<>();
-
-        for (Product product : mProductDAO.getProductsInfo()) {
-            names.add(product.getProductName());
-        }
-        return names;
-
     }
 
 }

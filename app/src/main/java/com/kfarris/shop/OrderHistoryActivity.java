@@ -1,7 +1,6 @@
 package com.kfarris.shop;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.kfarris.shop.DB.AppDatabase;
 import com.kfarris.shop.DB.GetDatabases;
-import com.kfarris.shop.DB.ProductDAO;
+import com.kfarris.shop.DB.ItemDAO;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivityOrderHistoryBinding;
 
@@ -30,7 +28,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
     User mUser;
 
     UserDAO mUserDAO;
-    ProductDAO mProductDAO;
+    ItemDAO mItemDAO;
 
     public static Intent intentFactory(Context packageContext, String username) {
         Intent intent = new Intent(packageContext, OrderHistoryActivity.class);
@@ -82,7 +80,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
     private void updateOrdersDisplay() {
         checkForNullItems();
 
-        List<String> list = mUser.getProductsOwned();
+        List<String> list = mUser.getItemOwned();
 
         if (list.size() > 0) {
 
@@ -90,13 +88,13 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
             for (int i = 0; i < list.size(); i++) {
 
-                Product product = mProductDAO.getProduct(list.get(i).toLowerCase());
+                Item item = mItemDAO.getItem(list.get(i).toLowerCase());
 
-                sb.append(product.getProductName() + "\n");
-                sb.append("You paid : $" + product.getPrice() + "\n");
-                sb.append("Shipping from : " + product.getLocation() + "\n");
-                sb.append("Product info : \n");
-                sb.append(product.getDescription() + "\n");
+                sb.append(item.getItemName() + "\n");
+                sb.append("You paid : $" + item.getPrice() + "\n");
+                sb.append("Shipping from : " + item.getLocation() + "\n");
+                sb.append("Item info : \n");
+                sb.append(item.getDescription() + "\n");
                 sb.append("- - - - - - - - - - - - - - - -\n");
 
 
@@ -109,30 +107,30 @@ public class OrderHistoryActivity extends AppCompatActivity {
     }
 
     /**
-     * Checks if the user that has items that do not exist in the product table.
+     * Checks if the user that has items that do not exist in the item table.
      */
     private void checkForNullItems() {
-        List<String> list = mUser.getProductsOwned();
+        List<String> list = mUser.getItemOwned();
         int size = list.size();
         for (int i = 0; i < list.size(); i++) {
-            Product product = mProductDAO.getProduct(list.get(i).toLowerCase());
+            Item item = mItemDAO.getItem(list.get(i).toLowerCase());
 
-            if (product == null) {
+            if (item == null) {
                 list.remove(i);
             }
         }
 
         if (list.size() != size) {
-            mUser.setProductsOwned(list);
+            mUser.setItemOwned(list);
             mUserDAO.update(mUser);
         }
     }
 
     /**
-     * Sets up the user and product table.
+     * Sets up the user and item table.
      */
     private void setupDatabase() {
         mUserDAO = GetDatabases.userDatabase(this);
-        mProductDAO = GetDatabases.productDatabase(this);
+        mItemDAO = GetDatabases.itemDatabase(this);
     }
 }

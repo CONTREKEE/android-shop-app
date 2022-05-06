@@ -1,22 +1,18 @@
 package com.kfarris.shop;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.kfarris.shop.DB.AppDatabase;
 import com.kfarris.shop.DB.GetDatabases;
-import com.kfarris.shop.DB.ProductDAO;
+import com.kfarris.shop.DB.ItemDAO;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivityCancelOrderBinding;
 
@@ -35,7 +31,7 @@ public class CancelOrderActivity extends AppCompatActivity {
     private List<String> mItemsOrdered;
 
     private UserDAO mUserDAO;
-    private ProductDAO mProductDAO;
+    private ItemDAO mItemDAO;
 
     private String mUsername;
 
@@ -102,24 +98,24 @@ public class CancelOrderActivity extends AppCompatActivity {
     /**
      * Cancels the current selected item.
      * Removes the item from the user table.
-     * Adds 1 more to the quantity of the item in the product table.
+     * Adds 1 more to the quantity of the item in the item table.
      */
     private void cancelItemOrder() {
-        String productName = mOrdersSpinner.getSelectedItem().toString();
-        Product product = mProductDAO.getProduct(productName.toLowerCase());
-        List<String> items = mUser.getProductsOwned();
-        if (product != null) {
-            if (items.contains(productName)) {
-                items.remove(productName);
-                mUser.setProductsOwned(items);
+        String itemName = mOrdersSpinner.getSelectedItem().toString();
+        Item item = mItemDAO.getItem(itemName.toLowerCase());
+        List<String> items = mUser.getItemOwned();
+        if (item != null) {
+            if (items.contains(itemName)) {
+                items.remove(itemName);
+                mUser.setItemOwned(items);
                 mUserDAO.update(mUser);
 
-                System.out.println(mProductDAO.getProductsInfo());
-                product.setQuantity(product.getQuantity() + 1);
-                mProductDAO.update(product);
+                System.out.println(mItemDAO.getItemInfo());
+                item.setQuantity(item.getQuantity() + 1);
+                mItemDAO.update(item);
 
-                Toast.makeText(CancelOrderActivity.this, "Order with item " + productName + " cancelled!", Toast.LENGTH_SHORT).show();
-                mAdapter.remove(productName);
+                Toast.makeText(CancelOrderActivity.this, "Order with item " + itemName + " cancelled!", Toast.LENGTH_SHORT).show();
+                mAdapter.remove(itemName);
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -132,8 +128,8 @@ public class CancelOrderActivity extends AppCompatActivity {
         ArrayList<String> items = new ArrayList<>();
         checkForNullItems();
 
-        for (String product : mUserDAO.getUserInfo(mUsername).getProductsOwned()) {
-            items.add(product);
+        for (String item : mUserDAO.getUserInfo(mUsername).getItemOwned()) {
+            items.add(item);
         }
         mItemsOrdered = items;
     }
@@ -150,29 +146,29 @@ public class CancelOrderActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the user and product table.
+     * Sets up the user and item table.
      */
     private void setupDatabase() {
         mUserDAO = GetDatabases.userDatabase(this);
-        mProductDAO = GetDatabases.productDatabase(this);
+        mItemDAO = GetDatabases.itemDatabase(this);
     }
 
     /**
-     * Checks if the user that has items that do not exist in the product table.
+     * Checks if the user that has items that do not exist in the item table.
      */
     private void checkForNullItems() {
-        List<String> list = mUser.getProductsOwned();
+        List<String> list = mUser.getItemOwned();
         int size = list.size();
         for (int i = 0; i < list.size(); i++) {
-            Product product = mProductDAO.getProduct(list.get(i).toLowerCase());
+            Item item = mItemDAO.getItem(list.get(i).toLowerCase());
 
-            if (product == null) {
+            if (item == null) {
                 list.remove(i);
             }
         }
 
         if (list.size() != size) {
-            mUser.setProductsOwned(list);
+            mUser.setItemOwned(list);
             mUserDAO.update(mUser);
         }
     }

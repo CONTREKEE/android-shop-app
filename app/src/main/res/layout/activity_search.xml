@@ -106,7 +106,7 @@
         app:layout_constraintTop_toBottomOf="@+id/search_page_stock_textView" />
 
     <TextView
-        android:id="@+id/search_page_productDetailsLabel_textView"
+        android:id="@+id/search_page_itemDetailsLabel_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="220dp"
@@ -120,7 +120,7 @@
         app:layout_constraintTop_toBottomOf="@+id/search_page_search_button" />
 
     <TextView
-        android:id="@+id/search_page_productDetailsText_textView"
+        android:id="@+id/search_page_itemDetailsText_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -130,7 +130,7 @@
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_page_productDetailsLabel_textView" />
+        app:layout_constraintTop_toBottomOf="@+id/search_page_itemDetailsLabel_textView" />
 
     <Button
         android:id="@+id/search_page_back_button"

@@ -1,25 +1,26 @@
 package com.kfarris.shop;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.kfarris.shop.DB.AppDatabase;
 import com.kfarris.shop.DB.GetDatabases;
-import com.kfarris.shop.DB.ProductDAO;
+import com.kfarris.shop.DB.ItemDAO;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -164,15 +165,43 @@ public class MainActivity extends AppCompatActivity {
      */
     public void createDefaultUsers() {
 
-        if (mUserDAO.getUserInfo("testuser1") == null) {
-            User testUser = new User("testuser1", "testuser1", 0, new ArrayList<>());
-            mUserDAO.insert(testUser);
-        }
+        if (mUserDAO.getUsersInfo().size() < 1) {
 
-        if (mUserDAO.getUserInfo("admin2") == null) {
-            User adminUser = new User("admin2", "admin2", 1, new ArrayList<>());
-            mUserDAO.insert(adminUser);
+            if (mUserDAO.getUserInfo("testuser1") == null) {
+                User testUser = new User("testuser1", "testuser1", 0, new ArrayList<>());
+                mUserDAO.insert(testUser);
+            }
+
+            if (mUserDAO.getUserInfo("admin2") == null) {
+                User adminUser = new User("admin2", "admin2", 1, new ArrayList<>());
+                mUserDAO.insert(adminUser);
+            }
         }
 
     }
+
+    /**
+     * Returns true if a user is an Admin.
+     * @param user
+     * @return
+     */
+    public static boolean isAdmin(User user) {
+        return (user.getIsAdmin() == 1);
+    }
+
+    /**
+     * Returns a list of all item names in the item table.
+     *
+     * @return
+     */
+    public static ArrayList<String> getAllItemNames(ItemDAO itemDAO) {
+
+        ArrayList<String> names = new ArrayList<>();
+
+        for (Item item : itemDAO.getItemInfo()) {
+            names.add(item.getItemName());
+        }
+        return names;
+    }
+
 }

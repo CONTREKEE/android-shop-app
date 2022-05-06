@@ -37,7 +37,7 @@
         android:id="@+id/admin_page_addAnItem_button"
         android:layout_width="150dp"
         android:layout_height="65dp"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="#000000"
         android:text="@string/add_an_item"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,16 +46,28 @@
         app:layout_constraintTop_toBottomOf="@+id/admin_page_likeToDo_textView" />
 
     <Button
+        android:id="@+id/admin_page_modifyAnItem_button"
+        android:layout_width="150dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#000000"
+        android:text="@string/modify_an_item"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/admin_page_addAnItem_button" />
+
+    <Button
         android:id="@+id/admin_page_viewExistingItems_button"
         android:layout_width="150dp"
         android:layout_height="65dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         android:backgroundTint="#000000"
         android:text="@string/view_existing_items"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/admin_page_addAnItem_button" />
+        app:layout_constraintTop_toBottomOf="@+id/admin_page_modifyAnItem_button" />
 
     <Button
         android:id="@+id/admin_page_removeAnItem_button"
