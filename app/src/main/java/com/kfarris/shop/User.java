@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey;
 
 import com.kfarris.shop.DB.AppDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = AppDatabase.USER_TABLE)
@@ -16,9 +17,9 @@ public class User {
     private String mUsername;
     private String mPassword = "password";
     private int mIsAdmin;
-    private List<String> mItemOwned;
+    private ArrayList<String> mItemOwned;
 
-    public User(String username, String password, int isAdmin, List<String> itemOwned) {
+    public User(String username, String password, int isAdmin, ArrayList<String> itemOwned) {
         mUsername = username;
         mPassword = password;
         mIsAdmin = isAdmin;
@@ -58,11 +59,11 @@ public class User {
         mId = id;
     }
 
-    public List<String> getItemOwned() {
+    public ArrayList<String> getItemOwned() {
         return mItemOwned;
     }
 
-    public void setItemOwned(List<String> itemOwned) {
+    public void setItemOwned(ArrayList<String> itemOwned) {
         mItemOwned = itemOwned;
     }
 

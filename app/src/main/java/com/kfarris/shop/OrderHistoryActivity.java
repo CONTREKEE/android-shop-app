@@ -14,6 +14,7 @@ import com.kfarris.shop.DB.ItemDAO;
 import com.kfarris.shop.DB.UserDAO;
 import com.kfarris.shop.databinding.ActivityOrderHistoryBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderHistoryActivity extends AppCompatActivity {
@@ -110,7 +111,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
      * Checks if the user that has items that do not exist in the item table.
      */
     private void checkForNullItems() {
-        List<String> list = mUser.getItemOwned();
+        ArrayList<String> list = mUser.getItemOwned();
         int size = list.size();
         for (int i = 0; i < list.size(); i++) {
             Item item = mItemDAO.getItem(list.get(i).toLowerCase());

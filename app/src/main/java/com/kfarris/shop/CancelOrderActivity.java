@@ -103,7 +103,7 @@ public class CancelOrderActivity extends AppCompatActivity {
     private void cancelItemOrder() {
         String itemName = mOrdersSpinner.getSelectedItem().toString();
         Item item = mItemDAO.getItem(itemName.toLowerCase());
-        List<String> items = mUser.getItemOwned();
+        ArrayList<String> items = mUser.getItemOwned();
         if (item != null) {
             if (items.contains(itemName)) {
                 items.remove(itemName);
@@ -157,7 +157,7 @@ public class CancelOrderActivity extends AppCompatActivity {
      * Checks if the user that has items that do not exist in the item table.
      */
     private void checkForNullItems() {
-        List<String> list = mUser.getItemOwned();
+        ArrayList<String> list = mUser.getItemOwned();
         int size = list.size();
         for (int i = 0; i < list.size(); i++) {
             Item item = mItemDAO.getItem(list.get(i).toLowerCase());
